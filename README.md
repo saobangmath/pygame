@@ -1,1 +1,1 @@
-# small game in Python with Pygame
+# small game in Python with Pygame 
