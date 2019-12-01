@@ -9,6 +9,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 # title and screen
 pygame.display.set_caption("XO")
 
+hitSound = pygame.mixer.Sound("hit.wav")
+backgroundSound = pygame.mixer.Sound("background.wav")
+
 enemies = []
 
 def ScoreRender():
@@ -31,6 +34,7 @@ def EnemyRender(man):
             if (bullet.isCollide(enemy)):
                 enemies.pop(enemies.index(enemy))
                 man.bullets.pop(man.bullets.index(bullet))
+                hitSound.play()
                 score += 1
                 break
 
@@ -47,6 +51,7 @@ def main():
     man = p.Player(310, 410, 20, 20)
     running = True
     while (running):
+        backgroundSound.play()
         pygame.time.delay(200)
         keys = pygame.key.get_pressed()
         if (score <= 100):
@@ -80,6 +85,7 @@ def main():
             renderWindow()
         else:
             enemies = []
+            man.bullets = []
             pygame.time.delay(200)
             screen.fill((0, 0, 255))
             pygame.display.update()
