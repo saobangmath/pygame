@@ -1,1 +1,2 @@
-# small game in Python with Pygame 
+# a shooting game written using Pygame module
+ 

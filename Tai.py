@@ -30,13 +30,17 @@ def EnemyRender(man):
         enemy.draw(screen)
     for enemy in enemies:
         s = True
-        for bullet in man.bullets:
-            if (bullet.isCollide(enemy)):
-                enemies.pop(enemies.index(enemy))
-                man.bullets.pop(man.bullets.index(bullet))
-                hitSound.play()
-                score += 1
-                break
+        if (man.isCollide(enemy)):
+            score+= 1
+            enemies.pop(enemies.index(enemy))
+        else:
+            for bullet in man.bullets:
+                if (bullet.isCollide(enemy)):
+                    enemies.pop(enemies.index(enemy))
+                    man.bullets.pop(man.bullets.index(bullet))
+                    hitSound.play()
+                    score += 1
+                    break
 
 
 def main():
@@ -46,15 +50,16 @@ def main():
         man.draw(screen)
         EnemyRender(man)
         ScoreRender()
+        backgroundSound.stop()
         pygame.display.update()
 
     man = p.Player(310, 410, 20, 20)
     running = True
     while (running):
-        backgroundSound.play()
         pygame.time.delay(200)
         keys = pygame.key.get_pressed()
         if (score <= 100):
+ #           backgroundSound.play()
             screen.fill((0, 0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -70,11 +75,15 @@ def main():
                 if (keys[pygame.K_DOWN] and man.y < screen_height - man.height - man.vel):
                     man.y += man.vel
                 if (keys[pygame.K_SPACE]):
-                    man.fire()
+                    if (score < 200):
+                        man.fire()
+                    else:
+                        score = 0
+                        enemies = []
                     #man.isJump = True
             else:
                 if (man.jumpCount >= -10):
-                    neg = 1
+                    neg =  1
                     if (man.jumpCount < 0):
                         neg = -1
                     man.y -= (man.jumpCount ** 2) * 0.5 * neg
@@ -86,13 +95,14 @@ def main():
         else:
             enemies = []
             man.bullets = []
-            pygame.time.delay(200)
+            backgroundSound.play()
             screen.fill((0, 0, 255))
             pygame.display.update()
             for event in pygame.event.get():
-                if (keys[pygame.K_SPACE]):
-                    score = 0
-
+                if (event.type == pygame.QUIT):
+                    running = False
+            if (keys[pygame.K_SPACE]):
+                score = 0
     pygame.quit()
 
 if __name__ == "__main__":
